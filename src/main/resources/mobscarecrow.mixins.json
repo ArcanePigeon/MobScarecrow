@@ -1,0 +1,31 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.cloudwarp.mobscarecrow.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ActivityAccessor",
+    "GoatBrainMixin",
+    "GoatEntityMixin",
+    "HoglinBrainMixin",
+    "HoglinEntitiyMixin",
+    "LivingEntityMixin",
+    "MemoryModuleTypeAccessor",
+    "MobEntityMixin",
+    "PanicTaskMixin",
+    "PiglinBrainMixin",
+    "PiglinBruteBrainMixin",
+    "PiglinBruteEntityMixin",
+    "PiglinEntityMixin",
+    "SensorTypeAccessor",
+    "VillagerEntityMixin",
+    "VillagerTaskListProviderMixin",
+    "VindicatorEntityMixin",
+    "ZoglinEntityMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

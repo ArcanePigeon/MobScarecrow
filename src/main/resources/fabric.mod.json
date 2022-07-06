@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "mobscarecrow",
+  "version": "${version}",
+
+  "name": "Mob Scarecrow",
+  "description": "Scary scarecrows / plushies that keeps mobs away from your home.",
+  "authors": [
+    "ArcanePigeon",
+    "Matsy"
+  ],
+  "contact": {
+    "homepage": "https://cloudwarp.org/",
+    "sources": "https://github.com/ReillyGregorio/MobScarecrow.git"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/mobscarecrow/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "org.cloudwarp.mobscarecrow.MobScarecrow"
+    ],
+    "client": [
+      "org.cloudwarp.mobscarecrow.client.MobScarecrowClient"
+    ]
+  },
+  "mixins": [
+    "mobscarecrow.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.8",
+    "fabric": "*",
+    "minecraft": "~1.19",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

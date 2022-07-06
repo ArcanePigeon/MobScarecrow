@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FWF",
+    "WPW",
+    "FWF"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:carved_pumpkin"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "F": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "result": {
+    "item": "mobscarecrow:copper_golem_plushie",
+    "count": 1
+  }
+}
