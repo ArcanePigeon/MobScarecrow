@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GWF",
+    "WPW",
+    "GWG"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:carved_pumpkin"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "F": {
+      "item": "minecraft:stone_pickaxe"
+    },
+    "G": {
+      "item": "minecraft:cobblestone"
+    }
+  },
+  "result": {
+    "item": "mobscarecrow:steve_plushie",
+    "count": 1
+  }
+}

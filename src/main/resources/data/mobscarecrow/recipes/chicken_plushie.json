@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GWF",
+    "WPW",
+    "FWG"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:carved_pumpkin"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "F": {
+      "item": "minecraft:feather"
+    },
+    "G": {
+      "item": "minecraft:wheat_seeds"
+    }
+  },
+  "result": {
+    "item": "mobscarecrow:chicken_plushie",
+    "count": 1
+  }
+}
