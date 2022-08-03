@@ -365,10 +365,7 @@ public class SmallPlushieEntity extends LivingEntity {
 		return this.bodyRotation;
 	}
 
-	@Override
-	public boolean collides() {
-		return super.collides() && !this.isMarker();
-	}
+
 
 	@Override
 	public boolean handleAttack(Entity attacker) {

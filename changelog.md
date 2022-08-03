@@ -65,3 +65,7 @@ All notable changes to this project will be documented in this file.
 ## [2.2.1] - 7/5/2022
 ### Fixed
 - Fixed entity names not displaying properly
+
+## [2.2.1 - 1.19.1] - 8/2/2022
+### Updated
+- Updated to 1.19.1
