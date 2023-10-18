@@ -1,11 +1,11 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'fabric-loom' version '1.4-SNAPSHOT'
     id 'maven-publish'
     id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
-def localProperties = new Properties()
-localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+//def localProperties = new Properties()
+//localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
@@ -90,28 +90,28 @@ publishing {
     }
 }
 
-curseforge {
-    apiKey = localProperties['ArcanePigeon']
-    project {
-        id = "560657"
-        releaseType = "release"
-        addGameVersion "1.19"
-        addGameVersion "Java 17"
-        addGameVersion "Fabric"
-        changelogType = "markdown"
-        changelog = file("changelog.md")
-        relations {
-            requiredDependency "fabric-api"
-        }
-        mainArtifact(jar) {
-            displayName = "Mob Scarecrows - ${project.mod_version} - Fabric"
-        }
-        afterEvaluate {
-            uploadTask.dependsOn("build")
-        }
-    }
-    options {
-        forgeGradleIntegration = false
-        javaVersionAutoDetect = true
-    }
-}
+//curseforge {
+//    apiKey = localProperties['ArcanePigeon']
+//    project {
+//        id = "560657"
+//        releaseType = "release"
+//        addGameVersion "1.19"
+//        addGameVersion "Java 17"
+//        addGameVersion "Fabric"
+//        changelogType = "markdown"
+//        changelog = file("changelog.md")
+//        relations {
+//            requiredDependency "fabric-api"
+//        }
+//        mainArtifact(jar) {
+//            displayName = "Mob Scarecrows - ${project.mod_version} - Fabric"
+//        }
+//        afterEvaluate {
+//            uploadTask.dependsOn("build")
+//        }
+//    }
+//    options {
+//        forgeGradleIntegration = false
+//        javaVersionAutoDetect = true
+//    }
+//}
