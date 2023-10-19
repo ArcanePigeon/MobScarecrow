@@ -6,10 +6,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.particle.FireworksSparkParticle;
-import net.minecraft.screen.PlayerScreenHandler;
-import org.cloudwarp.mobscarecrow.MobScarecrow;
 import org.cloudwarp.mobscarecrow.entities.renderers.*;
 import org.cloudwarp.mobscarecrow.models.*;
 import org.cloudwarp.mobscarecrow.registry.MSEntities;
@@ -19,9 +16,7 @@ import org.cloudwarp.mobscarecrow.registry.MSParticles;
 public class MobScarecrowClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient () {
-		ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(((atlasTexture, registry) -> {
-			registry.register(MobScarecrow.id("particle/plushie_particle"));
-		}));
+
 
 		ParticleFactoryRegistry.getInstance().register(MSParticles.PLUSHIE_PARTICLE, FireworksSparkParticle.ExplosionFactory::new);
 
