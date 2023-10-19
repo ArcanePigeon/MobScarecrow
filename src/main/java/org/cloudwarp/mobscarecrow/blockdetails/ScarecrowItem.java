@@ -48,7 +48,7 @@ public class ScarecrowItem extends Item {
 		}
 		if (world instanceof ServerWorld) {
 			ServerWorld serverWorld = (ServerWorld) world;
-			SmallPlushieEntity scarecrowEntity = scarecrowType.getEntityType().create(serverWorld, itemStack.getNbt(), null, context.getPlayer(), blockPos, SpawnReason.SPAWN_EGG, true, true);
+			SmallPlushieEntity scarecrowEntity = scarecrowType.getEntityType().create(serverWorld, itemStack.getNbt(), null, blockPos, SpawnReason.SPAWN_EGG, true, true);
 			if (scarecrowEntity == null) {
 				return ActionResult.FAIL;
 			}
