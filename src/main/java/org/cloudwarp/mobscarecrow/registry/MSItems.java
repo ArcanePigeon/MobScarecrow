@@ -7,6 +7,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.cloudwarp.mobscarecrow.blockdetails.ScarecrowItem;
 import org.cloudwarp.mobscarecrow.entities.MSEntityTypes;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 public class MSItems {
 	public static final ItemGroup MOB_SCARECROW_GROUP = FabricItemGroup.builder()
 			.icon(() -> new ItemStack(get("default_scarecrow")))
+			.displayName(Text.translatable("mobscarecrow.itemGroup.general"))
 			.build();
 	private static final HashMap<String, Item> ITEMS = new HashMap<>();
 
