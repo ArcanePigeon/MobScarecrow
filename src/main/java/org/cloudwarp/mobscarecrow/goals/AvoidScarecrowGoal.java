@@ -9,6 +9,7 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import org.cloudwarp.mobscarecrow.MobScarecrow;
 import org.cloudwarp.mobscarecrow.entities.SmallPlushieEntity;
 import org.cloudwarp.mobscarecrow.utils.ScarecrowAccess;
@@ -82,7 +83,8 @@ public class AvoidScarecrowGoal extends Goal {
 			if (newPos.squaredDistanceTo(scarecrowPos) < entity.squaredDistanceTo(scarecrowPos)) {
 				continue;
 			}
-			path = navigation.findPathTo(new BlockPos(newPos), 0);
+
+			path = navigation.findPathTo(new BlockPos(new Vec3i((int)newPos.getX(),(int)newPos.getY(), (int)newPos.getZ())), 0);
 			if (path != null) {
 				pathTimeLimiter = 5;
 				return true;
