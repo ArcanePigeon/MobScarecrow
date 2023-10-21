@@ -29,6 +29,7 @@ public class MobScarecrow implements ModInitializer {
 		MSEntities.init();
 		MSSounds.registerSounds();
 		MSItems.registerItems();
+		MSItems.registerItemGroup();
 		LOGGER.info("[Mob-Scarecrow] has successfully been initialized.");
 		LOGGER.info("[Mob-Scarecrow] if you have any issues or questions feel free to join my Discord: https://discord.gg/fvcFxTg6sB");
 	}

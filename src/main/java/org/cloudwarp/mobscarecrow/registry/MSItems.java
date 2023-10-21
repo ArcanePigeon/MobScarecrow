@@ -15,24 +15,24 @@ import org.cloudwarp.mobscarecrow.entities.MSEntityTypes;
 import java.util.HashMap;
 
 public class MSItems {
-	public static final ItemGroup MOB_SCARECROW_GROUP = FabricItemGroup.builder()
-			.icon(() -> new ItemStack(get("default_scarecrow")))
-			.displayName(Text.translatable("mobscarecrow.itemGroup.general"))
-			.build();
+
+	public static final RegistryKey<ItemGroup> MOB_SCARECROW_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier("mobscarecrow", "general"));
+
 	private static final HashMap<String, Item> ITEMS = new HashMap<>();
-
-
 
 	private static void registerItem (String id, Item item) {
 		ITEMS.put(id, Registry.register(Registries.ITEM, "mobscarecrow:" + id, item));
 		ItemGroupEvents
-				.modifyEntriesEvent(RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier("mobscarecrow", "general")))
+				.modifyEntriesEvent(MOB_SCARECROW_GROUP)
 				.register((itemGroup) -> itemGroup.add(item));
 
 	}
 
 	public static void registerItemGroup(){
-		Registry.register(Registries.ITEM_GROUP,new Identifier("mobscarecrow", "general"), MOB_SCARECROW_GROUP);
+		Registry.register(Registries.ITEM_GROUP, MOB_SCARECROW_GROUP, FabricItemGroup.builder()
+				       .icon(() -> new ItemStack(get("default_scarecrow")))
+				       .displayName(Text.translatable("mobscarecrow.group.general"))
+				       .build());
 	}
 
 	public static void registerItems () {
