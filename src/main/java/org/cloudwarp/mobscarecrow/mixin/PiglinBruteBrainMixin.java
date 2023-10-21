@@ -23,15 +23,15 @@ public class PiglinBruteBrainMixin {
 	@Inject(at = @At("HEAD"), method = "addFightActivities(Lnet/minecraft/entity/mob/PiglinBruteEntity;Lnet/minecraft/entity/ai/brain/Brain;)V")
 	private static void addFightActivities (PiglinBruteEntity piglin, Brain<PiglinBruteEntity> brain, CallbackInfo ci) {
 		brain.setTaskList(Activity.FIGHT, 10, ImmutableList.<Task<? super PiglinBruteEntity>>of(
-						new PacifyTask(MSMemoryModules.SCARECROW, 200)),
+						PacifyTask.create(MSMemoryModules.SCARECROW, 200)),
 				MemoryModuleType.ATTACK_TARGET);
 	}
 
 	@Inject(at = @At("HEAD"), method = "addIdleActivities(Lnet/minecraft/entity/mob/PiglinBruteEntity;Lnet/minecraft/entity/ai/brain/Brain;)V")
 	private static void addIdleActivities (PiglinBruteEntity piglinBrute, Brain<PiglinBruteEntity> brain, CallbackInfo ci) {
 		brain.setTaskList(Activity.IDLE, 10, ImmutableList.<Task<? super PiglinBruteEntity>>of(
-				new PacifyTask(MSMemoryModules.SCARECROW, 200),
-				GoToRememberedPositionTask.toBlock(MSMemoryModules.SCARECROW, 1.0f, 8, true), new GoToNearbyScarecrowTask(MSMemoryModules.ATTRACTIVE_SCARECROW, 0.8f, 1, 10)
+				PacifyTask.create(MSMemoryModules.SCARECROW, 200),
+				GoToRememberedPositionTask.createPosBased(MSMemoryModules.SCARECROW, 1.0f, 8, true), new GoToNearbyScarecrowTask(MSMemoryModules.ATTRACTIVE_SCARECROW, 0.8f, 1, 10)
 		));
 	}
 }

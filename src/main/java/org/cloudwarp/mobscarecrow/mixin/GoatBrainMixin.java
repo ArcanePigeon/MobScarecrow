@@ -24,8 +24,8 @@ public class GoatBrainMixin {
 	@Inject(at = @At("HEAD"), method = "addIdleActivities(Lnet/minecraft/entity/ai/brain/Brain;)V")
 	private static void addIdleActivities (Brain<GoatEntity> brain, CallbackInfo ci) {
 		brain.setTaskList(Activity.IDLE, 10, ImmutableList.<Task<? super GoatEntity>>of(
-				new PacifyTask(MSMemoryModules.SCARECROW, 200),
-				GoToRememberedPositionTask.toBlock(MSMemoryModules.SCARECROW, 1.0f, 8, true), new GoToNearbyScarecrowTask(MSMemoryModules.ATTRACTIVE_SCARECROW, 0.8f, 1, 10)
+				PacifyTask.create(MSMemoryModules.SCARECROW, 200),
+				GoToRememberedPositionTask.createPosBased(MSMemoryModules.SCARECROW, 1.0f, 8, true), new GoToNearbyScarecrowTask(MSMemoryModules.ATTRACTIVE_SCARECROW, 0.8f, 1, 10)
 		));
 	}
 
