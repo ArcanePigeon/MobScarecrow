@@ -6,7 +6,7 @@ import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 import org.cloudwarp.mobscarecrow.MobScarecrow;
 import org.cloudwarp.mobscarecrow.entities.SmallPlushieEntity;
 import org.cloudwarp.mobscarecrow.models.StevePlushieModel;
@@ -26,10 +26,10 @@ public class StevePlushieEntityRenderer extends LivingEntityRenderer<SmallPlushi
 
 	@Override
 	protected void setupTransforms(SmallPlushieEntity smallPlushieEntity, MatrixStack matrixStack, float f, float g, float h) {
-		matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0f - g));
-		float i = (float)(smallPlushieEntity.world.getTime() - smallPlushieEntity.lastHitTime) + h;
+		matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0f - g));
+		float i = (float)(smallPlushieEntity.getWorld().getTime() - smallPlushieEntity.lastHitTime) + h;
 		if (i < 5.0f) {
-			matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.sin(i / 1.5f * (float)Math.PI) * 3.0f));
+			matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(MathHelper.sin(i / 1.5f * (float)Math.PI) * 3.0f));
 		}
 	}
 
