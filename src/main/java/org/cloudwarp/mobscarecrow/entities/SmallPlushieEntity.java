@@ -5,30 +5,28 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.Wearable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
@@ -40,9 +38,7 @@ import org.cloudwarp.mobscarecrow.utils.ScarecrowAccess;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.function.Predicate;
 
 public class SmallPlushieEntity extends LivingEntity {
@@ -68,7 +64,7 @@ public class SmallPlushieEntity extends LivingEntity {
 
 	public SmallPlushieEntity (EntityType<? extends SmallPlushieEntity> entityType, World world, MSEntityTypes scarecrowType) {
 		super((EntityType<? extends LivingEntity>)entityType, world);
-		this.stepHeight = 0.0f;
+		this.setStepHeight(0.0f);
 		this.scarecrowType = scarecrowType;
 		this.distance = MobScarecrow.mobScarecrowRadius + 8D;
 	}
@@ -110,7 +106,7 @@ public class SmallPlushieEntity extends LivingEntity {
 
 	@Override
 	protected void tickCramming() {
-		List<Entity> list = this.world.getOtherEntities(this, this.getBoundingBox(), RIDEABLE_MINECART_PREDICATE);
+		List<Entity> list = this.getWorld().getOtherEntities(this, this.getBoundingBox(), RIDEABLE_MINECART_PREDICATE);
 		for (int i = 0; i < list.size(); ++i) {
 			Entity entity = list.get(i);
 			if (!(this.squaredDistanceTo(entity) <= 0.2)) continue;
@@ -135,22 +131,22 @@ public class SmallPlushieEntity extends LivingEntity {
 
 	@Override
 	public boolean damage(DamageSource source, float amount) {
-		if (this.world.isClient || this.isRemoved()) {
+		if (this.getWorld().isClient || this.isRemoved()) {
 			return false;
 		}
-		if (DamageSource.OUT_OF_WORLD.equals(source)) {
+		if (this.getDamageSources().outOfWorld().equals(source)) {
 			this.kill();
 			return false;
 		}
 		if (this.isInvulnerableTo(source) || this.invisible || this.isMarker()) {
 			return false;
 		}
-		if (source.isExplosive()) {
+		if (this.getDamageSources().explosion(null, null).equals(source)) {
 			this.onBreak(source);
 			this.kill();
 			return false;
 		}
-		if (DamageSource.IN_FIRE.equals(source)) {
+		if (this.getDamageSources().outOfWorld().equals(source)) {
 			if (this.isOnFire()) {
 				this.updateHealth(source, 0.15f);
 			} else {
@@ -158,7 +154,7 @@ public class SmallPlushieEntity extends LivingEntity {
 			}
 			return false;
 		}
-		if (DamageSource.ON_FIRE.equals(source) && this.getHealth() > 0.5f) {
+		if (this.getDamageSources().onFire().equals(source) && this.getHealth() > 0.5f) {
 			this.updateHealth(source, 4.0f);
 			return false;
 		}
@@ -177,13 +173,13 @@ public class SmallPlushieEntity extends LivingEntity {
 			this.kill();
 			return bl2;
 		}
-		long l = this.world.getTime();
+		long l = this.getWorld().getTime();
 		if (l - this.lastHitTime <= 5L || bl) {
 			this.breakAndDropItem(source);
 			this.spawnBreakParticles();
 			this.kill();
 		} else {
-			this.world.sendEntityStatus(this, (byte)32);
+			this.getWorld().sendEntityStatus(this, (byte)32);
 			this.emitGameEvent(GameEvent.ENTITY_DAMAGE, source.getAttacker());
 			this.lastHitTime = l;
 		}
@@ -193,9 +189,9 @@ public class SmallPlushieEntity extends LivingEntity {
 	@Override
 	public void handleStatus(byte status) {
 		if (status == 32) {
-			if (this.world.isClient) {
-				this.world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ARMOR_STAND_HIT, this.getSoundCategory(), 0.3f, 1.0f, false);
-				this.lastHitTime = this.world.getTime();
+			if (this.getWorld().isClient) {
+				this.getWorld().playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ARMOR_STAND_HIT, this.getSoundCategory(), 0.3f, 1.0f, false);
+				this.lastHitTime = this.getWorld().getTime();
 			}
 		} else {
 			super.handleStatus(status);
@@ -227,12 +223,12 @@ public class SmallPlushieEntity extends LivingEntity {
 	}
 
 	private void spawnBreakParticles() {
-		if (this.world instanceof ServerWorld) {
+		if (this.getWorld() instanceof ServerWorld) {
 			if(scarecrowType == MSEntityTypes.DEFAULT_SCARECROW){
-				((ServerWorld)this.world).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.HAY_BLOCK.getDefaultState()), this.getX(), this.getBodyY(0.6666666666666666), this.getZ(), 10, this.getWidth() / 4.0f, this.getHeight() / 4.0f, this.getWidth() / 4.0f, 0.05);
+				((ServerWorld)this.getWorld()).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.HAY_BLOCK.getDefaultState()), this.getX(), this.getBodyY(0.6666666666666666), this.getZ(), 10, this.getWidth() / 4.0f, this.getHeight() / 4.0f, this.getWidth() / 4.0f, 0.05);
 				return;
 			}
-			((ServerWorld)this.world).spawnParticles(MSParticles.PLUSHIE_PARTICLE, this.getX(), this.getBodyY(0.66666), this.getZ(), 10, this.getWidth() / 8.0f, this.getHeight() / 8.0f, this.getWidth() / 8.0f, 0.2);
+			((ServerWorld)this.getWorld()).spawnParticles(MSParticles.PLUSHIE_PARTICLE, this.getX(), this.getBodyY(0.66666), this.getZ(), 10, this.getWidth() / 8.0f, this.getHeight() / 8.0f, this.getWidth() / 8.0f, 0.2);
 		}
 	}
 
@@ -248,7 +244,7 @@ public class SmallPlushieEntity extends LivingEntity {
 	}
 
 	private void breakAndDropItem(DamageSource damageSource) {
-		Block.dropStack(this.world, this.getBlockPos(), new ItemStack(MSItems.get(scarecrowType.id)));
+		Block.dropStack(this.getWorld(), this.getBlockPos(), new ItemStack(MSItems.get(scarecrowType.id)));
 		this.onBreak(damageSource);
 	}
 
@@ -259,13 +255,13 @@ public class SmallPlushieEntity extends LivingEntity {
 
 	private void playBreakSound() {
 		if(scarecrowType == MSEntityTypes.DEFAULT_SCARECROW){
-			this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.BLOCK_GRASS_BREAK, this.getSoundCategory(), 1.0f, 1.0f);
+			this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.BLOCK_GRASS_BREAK, this.getSoundCategory(), 1.0f, 1.0f);
 			return;
 		}
-		this.world.playSound(null, this.getX(), this.getY(), this.getZ(), MSSounds.PLUSHIE_BREAK_EVENT, this.getSoundCategory(), 1.0f, 1.0f);
+		this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), MSSounds.PLUSHIE_BREAK_EVENT, this.getSoundCategory(), 1.0f, 1.0f);
 	}
 	private void playSqueakSound() {
-		this.world.playSound(null, this.getX(), this.getY(), this.getZ(), MSSounds.PLUSHIE_SQUEAK_EVENT, this.getSoundCategory(), 1.0f, 1.0f);
+		this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), MSSounds.PLUSHIE_SQUEAK_EVENT, this.getSoundCategory(), 1.0f, 1.0f);
 	}
 
 	@Override
@@ -366,13 +362,15 @@ public class SmallPlushieEntity extends LivingEntity {
 	}
 
 	@Override
-	public boolean collides() {
-		return super.collides() && !this.isMarker();
+	public boolean canHit() {
+		return super.canHit() && !this.isMarker();
 	}
+
+
 
 	@Override
 	public boolean handleAttack(Entity attacker) {
-		return attacker instanceof PlayerEntity && !this.world.canPlayerModifyAt((PlayerEntity)attacker, this.getBlockPos());
+		return attacker instanceof PlayerEntity && !this.getWorld().canPlayerModifyAt((PlayerEntity)attacker, this.getBlockPos());
 	}
 
 	@Override
@@ -450,8 +448,8 @@ public class SmallPlushieEntity extends LivingEntity {
 			Box box = this.getDimensions(false).getBoxAt(this.getPos());
 			BlockPos blockPos = this.getBlockPos();
 			int i = Integer.MIN_VALUE;
-			for (BlockPos blockPos2 : BlockPos.iterate(new BlockPos(box.minX, box.minY, box.minZ), new BlockPos(box.maxX, box.maxY, box.maxZ))) {
-				int j = Math.max(this.world.getLightLevel(LightType.BLOCK, blockPos2), this.world.getLightLevel(LightType.SKY, blockPos2));
+			for (BlockPos blockPos2 : BlockPos.iterate(new BlockPos((int)box.minX, (int)box.minY, (int)box.minZ), new BlockPos((int)box.maxX, (int)box.maxY, (int)box.maxZ))) {
+				int j = Math.max(this.getWorld().getLightLevel(LightType.BLOCK, blockPos2), this.getWorld().getLightLevel(LightType.SKY, blockPos2));
 				if (j == 15) {
 					return Vec3d.ofCenter(blockPos2);
 				}
@@ -534,7 +532,7 @@ public class SmallPlushieEntity extends LivingEntity {
 		this.cooldown = MathHelper.ceilDiv(10, 2);
 
 		scarecrowType.getScaredEntities().forEach(entity -> {
-			List<? extends LivingEntity> targets =  this.world.getEntitiesByClass(entity,
+			List<? extends LivingEntity> targets =  this.getWorld().getEntitiesByClass(entity,
 					this.getBoundingBox().expand(distance, 3.0, distance),
 					living -> true);
 			targets.forEach(livingEntity -> {
@@ -542,7 +540,7 @@ public class SmallPlushieEntity extends LivingEntity {
 			});
 		});
 		scarecrowType.getAttractedEntities().forEach(entity -> {
-			List<? extends LivingEntity> targets =  this.world.getEntitiesByClass(entity,
+			List<? extends LivingEntity> targets =  this.getWorld().getEntitiesByClass(entity,
 					this.getBoundingBox().expand(distance, 3.0, distance),
 					living -> true);
 			targets.forEach(livingEntity -> {
